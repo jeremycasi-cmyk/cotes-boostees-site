@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RJC Boost — Cotes boostées & value betting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A0E17;
+    --panel:#111828;
+    --panel-2:#182034;
+    --line:#28324A;
+    --paper:#EEF0F6;
+    --paper-dim:#8B93AA;
+    --gold:#D9A441;
+    --gold-dim:#B4842F;
+    --blue:#4C7CF0;
+    --blue-dim:#2B4CBE;
+    --green:#3FBF8F;
+    --red:#E5546B;
+    --radius:12px;
+    --bigclash:#FF5A3C;
+    --celsius:#3ECAF0;
+    --betclic:#FF6A00;
+    --winamax:#E3001B;
+    --unibet:#1FAE5C;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;background:var(--ink);color:var(--paper);
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.55;
+    cursor:default;
+  }
+  .disp{font-family:"Space Grotesk",sans-serif;}
+  .mono{font-family:"IBM Plex Mono",monospace;}
+  a{color:inherit;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;}
+  }
+  ::-webkit-scrollbar{width:10px;}
+  ::-webkit-scrollbar-track{background:var(--ink);}
+  ::-webkit-scrollbar-thumb{background:var(--panel-2);border-radius:6px;border:2px solid var(--ink);}
+  ::-webkit-scrollbar-thumb:hover{background:var(--gold-dim);}
+
+  /* grain texture overlay */
+  .grain{
+    position:fixed;inset:0;z-index:50;pointer-events:none;opacity:0.035;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .glow{position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(76,124,240,0.16),transparent 70%);filter:blur(40px);pointer-events:none;z-index:0;}
+  #cursor-glow{
+    position:absolute;width:420px;height:420px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,rgba(217,164,65,0.10),transparent 70%);
+    transform:translate(-50%,-50%);z-index:0;transition:opacity .3s;opacity:0;
+  }
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:30;background:rgba(10,14,23,0.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  .navlinks{display:flex;gap:26px;font-size:14px;color:var(--paper-dim);}
+  .navlinks a{text-decoration:none;position:relative;}
+  .navlinks a::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--gold);transition:width .2s;}
+  .navlinks a:hover::after{width:100%;}
+  .navlinks a:hover{color:var(--paper);}
+  @media (max-width:700px){.navlinks{display:none;}}
+  .btn-nav{background:var(--gold);color:var(--ink);font-weight:600;font-size:14px;padding:9px 18px;border-radius:8px;text-decoration:none;transition:transform .15s;}
+  .btn-nav:hover{transform:translateY(-1px);}
+
+  /* HERO */
+  header.hero{padding:64px 0 0;position:relative;z-index:1;overflow:hidden;}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 18px;display:flex;align-items:center;gap:8px;}
+  .eyebrow .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.6s infinite;}
+  h1{font-size:clamp(32px,5.2vw,54px);margin:0 0 20px;letter-spacing:-0.02em;font-weight:700;max-width:17ch;}
+  h1 .accent{color:var(--gold);}
+  .hero-sub{color:var(--paper-dim);font-size:17px;max-width:54ch;margin:0 0 30px;}
+  .cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:16px;}
+  .btn-primary{background:var(--gold);color:var(--ink);font-weight:600;font-size:15.5px;padding:15px 26px;border-radius:9px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform .15s,box-shadow .15s;}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(217,164,65,0.25);}
+  .btn-secondary{background:transparent;color:var(--paper);font-weight:600;font-size:15.5px;padding:14px 24px;border-radius:9px;text-decoration:none;border:1px solid var(--line);display:inline-flex;align-items:center;gap:8px;transition:border-color .15s;}
+  .btn-secondary:hover{border-color:var(--blue);}
+  .microcopy{font-size:12.5px;color:var(--paper-dim);margin:0 0 44px;}
+
+  /* LIVE TICKER */
+  .ticker-shell{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel);overflow:hidden;position:relative;z-index:1;}
+  .ticker-shell::before,.ticker-shell::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none;}
+  .ticker-shell::before{left:0;background:linear-gradient(90deg,var(--panel),transparent);}
+  .ticker-shell::after{right:0;background:linear-gradient(-90deg,var(--panel),transparent);}
+  .ticker-track{display:flex;gap:0;width:max-content;animation:scroll 38s linear infinite;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  .tick{display:flex;align-items:center;gap:14px;padding:16px 30px;border-right:1px solid var(--line);white-space:nowrap;font-size:14px;}
+  .tick .bk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--blue);border:1px solid var(--blue-dim);padding:2px 8px;border-radius:20px;}
+  .tick .match{font-weight:600;}
+  .tick .odds{font-family:"IBM Plex Mono",monospace;}
+  .tick .old{color:var(--paper-dim);text-decoration:line-through;}
+  .tick .new{color:var(--gold);font-weight:600;}
+  .tick .expire{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--red);display:flex;align-items:center;gap:4px;}
+  .tick .expire .rdot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1s infinite;}
+
+  main{position:relative;z-index:1;}
+  section{padding:64px 0;border-top:1px solid var(--line);}
+  .section-head{max-width:60ch;margin-bottom:40px;}
+  .section-eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin:0 0 10px;}
+  h2{font-size:clamp(24px,3vw,32px);margin:0;font-weight:700;letter-spacing:-0.01em;}
+
+  /* STATS */
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  @media (max-width:750px){.stats-row{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:border-color .2s,transform .2s;}
+  .stat:hover{border-color:var(--gold-dim);transform:translateY(-3px);}
+  .stat .num{font-family:"IBM Plex Mono",monospace;font-size:28px;font-weight:600;color:var(--paper);}
+  .stat .num.green{color:var(--green);}
+  .stat .lbl{font-size:12.5px;color:var(--paper-dim);margin-top:4px;}
+  .stat .sub{font-size:11px;color:var(--paper-dim);margin-top:2px;opacity:.7;}
+
+  /* OFFER CARDS — tilt 3D + identité par bookmaker */
+  .offers{display:grid;grid-template-columns:1fr 1fr;gap:22px;perspective:1000px;}
+  @media (max-width:750px){.offers{grid-template-columns:1fr;}}
+  .offer-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:28px;
+    display:flex;flex-direction:column;position:relative;overflow:hidden;
+    transform-style:preserve-3d;transition:transform .12s ease-out,border-color .2s;
+    --accent:var(--gold);
+  }
+  .offer-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--accent),transparent);
+  }
+  .offer-card .sport-icon{
+    position:absolute;top:20px;right:20px;width:54px;height:54px;color:var(--accent);opacity:.9;
+    transform:translateZ(40px);filter:drop-shadow(0 6px 14px rgba(0,0,0,0.4));
+  }
+  .offer-card:hover{border-color:var(--accent);}
+  .offer-card .bmk{font-weight:700;font-size:20px;margin-bottom:4px;transform:translateZ(20px);}
+  .offer-card .bonus{font-family:"IBM Plex Mono",monospace;color:var(--accent);font-size:32px;font-weight:600;margin:14px 0 6px;transform:translateZ(30px);}
+  .offer-card .cond{color:var(--paper-dim);font-size:13.5px;margin-bottom:22px;max-width:80%;}
+  .offer-card .btn-primary{justify-content:center;margin-top:auto;background:var(--accent);color:var(--ink);transform:translateZ(15px);}
+  .perk{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--accent);background:color-mix(in srgb, var(--accent) 12%, transparent);border:1px solid color-mix(in srgb, var(--accent) 35%, transparent);padding:3px 9px;border-radius:20px;margin-bottom:14px;}
+
+  .codes-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:22px;}
+  .code-chip{
+    background:var(--panel-2);border:1px solid var(--line);border-left:3px solid var(--accent, var(--gold));border-radius:9px;padding:12px 18px;
+    display:flex;align-items:center;gap:10px;font-size:13.5px;text-decoration:none;transition:transform .15s,border-color .15s;
+  }
+  .code-chip:hover{transform:translateY(-2px);border-color:var(--accent, var(--gold));}
+  .code-chip .name{font-weight:600;}
+  .code-chip .code{font-family:"IBM Plex Mono",monospace;color:var(--accent,var(--gold));}
+
+  /* TOOL TEASER */
+  .tool-teaser{background:linear-gradient(135deg,var(--panel),var(--panel-2));border:1px solid var(--line);border-radius:var(--radius);padding:36px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;position:relative;overflow:hidden;}
+  .tool-teaser h3{margin:0 0 8px;font-size:21px;}
+  .tool-teaser p{margin:0;color:var(--paper-dim);font-size:14.5px;max-width:48ch;}
+
+  /* COMMUNITY */
+  .community{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  @media (max-width:750px){.community{grid-template-columns:1fr;}}
+  .comm-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:26px;transition:transform .2s;}
+  .comm-card:hover{transform:translateY(-3px);}
+  .comm-card.premium{border-color:var(--gold-dim);}
+  .comm-card .badge{font-family:"IBM Plex Mono",monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--paper-dim);margin-bottom:10px;display:block;}
+  .comm-card.premium .badge{color:var(--gold);}
+  .comm-card h3{margin:0 0 10px;font-size:19px;}
+  .comm-card ul{margin:0 0 22px;padding-left:18px;color:var(--paper-dim);font-size:14px;}
+  .comm-card li{margin-bottom:6px;}
+  .price{font-family:"IBM Plex Mono",monospace;font-size:15px;color:var(--paper-dim);margin-bottom:16px;}
+  .price .amount{color:var(--paper);font-size:22px;font-weight:600;}
+  .price .strike{text-decoration:line-through;opacity:.5;font-size:14px;margin-left:6px;}
+
+  /* TRANSPARENCY */
+  .transparency{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:28px;font-size:14.5px;color:var(--paper-dim);}
+  .transparency strong{color:var(--paper);}
+  .transparency .highlight{display:inline-block;background:var(--panel-2);border:1px solid var(--line);padding:2px 8px;border-radius:6px;color:var(--gold);font-family:"IBM Plex Mono",monospace;font-size:13.5px;}
+
+  footer{border-top:1px solid var(--line);padding:36px 0 44px;position:relative;z-index:1;}
+  .legal{font-size:12px;color:var(--paper-dim);line-height:1.7;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:20px;}
+  .legal strong{color:var(--paper);}
+  .foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--paper-dim);}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="glow"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="brand disp"><span class="dot"></span>RJC BOOST</div>
+    <div class="navlinks">
+      <a href="#offres">Bonus</a>
+      <a href="#outil">Calculateur</a>
+      <a href="#communaute">Communauté</a>
+      <a href="#transparence">Bilan</a>
+    </div>
+    <a class="btn-nav" href="#offres">Voir les bonus</a>
+  </div>
+</nav>
+
+<header class="hero" id="hero">
+  <div id="cursor-glow"></div>
+  <div class="wrap" style="position:relative;z-index:1;">
+    <p class="eyebrow"><span class="pulse"></span>~50 cotes boostées analysées / semaine</p>
+    <h1 class="disp">La <span class="accent">value</span>, filtrée avant de parier.</h1>
+    <p class="hero-sub">On sélectionne les cotes boostées avec un vrai avantage mathématique, chez tous les bookmakers, et on publie chaque semaine le bilan complet — gagnante ou perdante.</p>
+    <div class="cta-row">
+      <a class="btn-primary" href="#offres">Profiter d'un bonus jusqu'à 100€ →</a>
+      <a class="btn-secondary" href="https://t.me/cbbooste" target="_blank" rel="noopener">Rejoindre le Telegram gratuit</a>
+    </div>
+    <p class="microcopy">18+ · Jeu responsable · Aucune garantie de gain</p>
+  </div>
+</header>
+
+<div class="ticker-shell">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+
+<main>
+<section id="stats">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="section-eyebrow">Bilan réel — saison 25/26</p>
+      <h2 class="disp">On publie les vrais chiffres</h2>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="num green" data-count="1951.80" data-suffix="€">0€</div><div class="lbl">Bénéfice cumulé</div><div class="sub">depuis 300€ de départ</div></div>
+      <div class="stat"><div class="num green" data-count="10.95" data-suffix="%">0%</div><div class="lbl">ROI</div><div class="sub">sur 17 828,40€ misés</div></div>
+      <div class="stat"><div class="num" data-count="1413" data-suffix="">0</div><div class="lbl">Paris suivis</div><div class="sub">642 gagnants · 738 perdants</div></div>
+      <div class="stat"><div class="num" data-count="46.52" data-suffix="%">0%</div><div class="lbl">Taux de réussite</div><div class="sub">profitable sous les 50% grâce à la value</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="offres">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="section-eyebrow">Bonus de bienvenue</p>
+      <h2 class="disp">Les offres actives</h2>
+    </div>
+    <div id="offers-container">
+      <div class="offers" id="offers-cards">
+        <div class="offer-card" style="--accent:var(--bigclash);">
+          <svg class="sport-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 12c0-2.5 2-4.5 4.5-4.5H14a3 3 0 0 1 3 3v1.5"/><path d="M6 13v3a3 3 0 0 0 3 3h2"/><rect x="3.5" y="10" width="5" height="6" rx="2"/><path d="M17 12.5v3a3 3 0 0 1-3 3h-1"/></svg>
+          <span class="perk">● Le plus gros bonus</span>
+          <div class="bmk disp">BigClash</div>
+          <div class="cond">Bonus à l'inscription</div>
+          <div class="bonus">100€</div>
+          <div class="cond">Pour un dépôt minimum de 22€. Cotes ultra-boostées les premiers jours. Utilisez le calculateur pour maximiser le retrait.</div>
+          <a class="btn-primary" href="https://mma.lynmonkel.com/?mid=372858_2180222" target="_blank" rel="noopener">S'inscrire sur BigClash</a>
+        </div>
+        <div class="offer-card" style="--accent:var(--celsius);">
+          <svg class="sport-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v20M12 2l2.5 2.5M12 2 9.5 4.5M12 22l2.5-2.5M12 22 9.5 19.5M4 7l16 10M4 7l3.3.7M4 7l1 3.2M20 17l-3.3-.7M20 17l-1-3.2M4 17l16-10M4 17l3.3-.7M4 17l1-3.2M20 7l-3.3.7M20 7l-1 3.2"/></svg>
+          <span class="perk">● Freebet 50%</span>
+          <div class="bmk disp">Celsius</div>
+          <div class="cond">Bonus à l'inscription</div>
+          <div class="bonus">25€</div>
+          <div class="cond">Pour un dépôt minimum de 10€ (freebet à 50% du dépôt). Utilisez le calculateur pour en extraire le maximum garanti.</div>
+          <a class="btn-primary" href="https://celsius.games/pEuLPHXXjO" target="_blank" rel="noopener">S'inscrire sur Celsius</a>
+        </div>
+      </div>
+      <div class="codes-row" id="offers-codes">
+        <a class="code-chip" style="--accent:var(--betclic);" href="#" target="_blank" rel="noopener"><span class="name">Betclic</span><span class="code">BOOSZK0H</span></a>
+        <a class="code-chip" style="--accent:var(--winamax);" href="#" target="_blank" rel="noopener"><span class="name">Winamax</span><span class="code">ELJFY2</span></a>
+        <a class="code-chip" style="--accent:var(--unibet);" href="https://www.unibet.fr/inscription/?campaign=210726&parrain=887A425757B286DA" target="_blank" rel="noopener"><span class="name">Unibet</span><span class="code">S'inscrire →</span></a>
+      </div>
+      <p class="microcopy" id="offers-updated" style="margin-top:14px;"></p>
+    </div>
+  </div>
+</section>
+
+<section id="outil">
+  <div class="wrap">
+    <div class="tool-teaser">
+      <div>
+        <h3 class="disp">Calculateur de conversion de bonus</h3>
+        <p>Débloquez votre dépôt et extrayez votre freebet au meilleur pourcentage possible — méthode expliquée, calcul automatique.</p>
+      </div>
+      <a class="btn-primary" href="calculateur-bonus.html">Ouvrir l'outil →</a>
+    </div>
+  </div>
+</section>
+
+<section id="communaute">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="section-eyebrow">Communauté</p>
+      <h2 class="disp">Suivez chaque cote, en direct</h2>
+    </div>
+    <div class="community">
+      <div class="comm-card">
+        <span class="badge">Gratuit</span>
+        <h3 class="disp">Telegram public</h3>
+        <ul>
+          <li>Une sélection des meilleures cotes boostées</li>
+          <li>Explications value & EV</li>
+          <li>Bilans publiés chaque semaine</li>
+        </ul>
+        <a class="btn-secondary" style="width:100%;justify-content:center;" href="https://t.me/cbbooste" target="_blank" rel="noopener">Rejoindre gratuitement (42 membres)</a>
+      </div>
+      <div class="comm-card premium">
+        <span class="badge">Premium</span>
+        <h3 class="disp">Telegram privé</h3>
+        <div class="price"><span class="amount">7-15€</span> / mois <span class="strike">14,99€</span></div>
+        <ul>
+          <li>Toutes les cotes boostées filtrées, dès leur sortie — certaines ne durent que quelques minutes</li>
+          <li>Alertes en temps réel</li>
+          <li>Suivi de bankroll détaillé, comme le bilan ci-dessus</li>
+        </ul>
+        <a class="btn-primary" style="width:100%;justify-content:center;" href="https://t.me/cbbooste" target="_blank" rel="noopener">Voir l'abonnement</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="transparence">
+  <div class="wrap">
+    <div class="transparency">
+      <strong>Notre position :</strong> on ne vend pas du rêve. Sur la saison en cours, on a gagné <span class="highlight">46,52%</span> de nos paris — moins d'un sur deux — et pourtant le bilan est positif à <span class="highlight">+650%</span> de progression. C'est ça, la value : ce n'est pas gagner plus souvent, c'est parier quand les cotes sont mal évaluées. La variance existe, certaines semaines sont perdantes, et on les publie comme les autres.
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="legal">
+      <strong>Jeu responsable :</strong> jouer comporte des risques : endettement, isolement, dépendance. Pour être aidé, appelez le 09 74 75 13 13 (appel non surtaxé) ou consultez joueurs-info-service.fr. Interdit aux mineurs. Les liens vers les bookmakers sont des liens d'affiliation : nous pouvons percevoir une commission sans surcoût pour vous. Les cotes et bonus sont donnés à titre indicatif et peuvent varier — vérifiez toujours les conditions exactes sur le site de l'opérateur avant de déposer.
+    </div>
+    <div class="foot-row">
+      <span>RJC Boost — @RJCBoost</span>
+      <span>t.me/cbbooste</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Ticker — vrais boosts postés récemment
+const boosts = [
+  {bk:'Winamax', match:'Górnik Zabrze - Fenerbahce', old:'3,40', new:'3,75', expire:'Dispo jusqu\'à 20h'},
+  {bk:'Unibet', match:'T.Atmane - A.Tabilo (2 sets à 0)', old:'2,70', new:'3,10', expire:'Dispo jusqu\'à 22h30'},
+  {bk:'Betclic', match:'Pogačar podium étape 20', old:'1,50', new:'2,00', expire:'Dispo jusqu\'à 11h30'},
+  {bk:'Betclic', match:'Espagne - Argentine, 1 but ou +', old:'1,22', new:'2,00', expire:'Dispo pendant la MT'},
+  {bk:'Unibet', match:'Messi/Yamal/Oyarzabal buteur', old:'1,75', new:'2,10', expire:'Dispo 90 mins'},
+];
+function tickHTML(b){
+  return `<div class="tick">
+    <span class="bk">${b.bk}</span>
+    <span class="match">${b.match}</span>
+    <span class="odds"><span class="old">${b.old}</span> → <span class="new">${b.new}</span></span>
+    <span class="expire"><span class="rdot"></span>${b.expire}</span>
+  </div>`;
+}
+const track = document.getElementById('ticker');
+track.innerHTML = boosts.map(tickHTML).join('') + boosts.map(tickHTML).join('');
+
+// Count-up stats
+function animateCount(el){
+  const target = parseFloat(el.dataset.count);
+  const suffix = el.dataset.suffix || '';
+  const isInt = Number.isInteger(target);
+  let start = null;
+  const duration = 1400;
+  function step(ts){
+    if(!start) start = ts;
+    const progress = Math.min((ts - start) / duration, 1);
+    const eased = 1 - Math.pow(1-progress, 3);
+    const val = target * eased;
+    el.textContent = (isInt ? Math.round(val).toLocaleString('fr-FR') : val.toFixed(2).replace('.', ',')) + suffix;
+    if(progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      animateCount(entry.target);
+      observer.unobserve(entry.target);
+    }
+  });
+}, {threshold:0.4});
+document.querySelectorAll('.num[data-count]').forEach(el=>observer.observe(el));
+
+// Tilt 3D léger sur les cartes d'offre
+document.querySelectorAll('.offer-card').forEach(card=>{
+  card.addEventListener('mousemove', (e)=>{
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const rotY = ((x / rect.width) - 0.5) * 10;
+    const rotX = ((y / rect.height) - 0.5) * -10;
+    card.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave', ()=>{
+    card.style.transform = 'rotateX(0) rotateY(0) translateY(0)';
+  });
+});
+
+// Halo qui suit le curseur dans le hero
+const heroEl = document.getElementById('hero');
+const glowEl = document.getElementById('cursor-glow');
+heroEl.addEventListener('mousemove', (e)=>{
+  const rect = heroEl.getBoundingClientRect();
+  glowEl.style.left = (e.clientX - rect.left) + 'px';
+  glowEl.style.top = (e.clientY - rect.top) + 'px';
+  glowEl.style.opacity = '1';
+});
+heroEl.addEventListener('mouseleave', ()=>{ glowEl.style.opacity = '0'; });
+
+// Offres dynamiques — lues depuis un Google Sheet public via opensheet.elk.sh
+const SHEET_ID = '13Qp5IiWt_YreXhXoY-_PEgtiys0d-MtCU5L1IUraWsQ';
+const SHEET_TAB = 'offres';
+
+const ICONS = {
+  bigclash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 12c0-2.5 2-4.5 4.5-4.5H14a3 3 0 0 1 3 3v1.5"/><path d="M6 13v3a3 3 0 0 0 3 3h2"/><rect x="3.5" y="10" width="5" height="6" rx="2"/><path d="M17 12.5v3a3 3 0 0 1-3 3h-1"/></svg>`,
+  celsius: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v20M12 2l2.5 2.5M12 2 9.5 4.5M12 22l2.5-2.5M12 22 9.5 19.5M4 7l16 10M4 7l3.3.7M4 7l1 3.2M20 17l-3.3-.7M20 17l-1-3.2M4 17l16-10M4 17l3.3-.7M4 17l1-3.2M20 7l-3.3.7M20 7l-1 3.2"/></svg>`,
+  default: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>`
+};
+
+function attachTilt(card){
+  card.addEventListener('mousemove', (e)=>{
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left, y = e.clientY - rect.top;
+    const rotY = ((x / rect.width) - 0.5) * 10;
+    const rotX = ((y / rect.height) - 0.5) * -10;
+    card.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave', ()=>{ card.style.transform = 'rotateX(0) rotateY(0) translateY(0)'; });
+}
+
+async function loadOffers(){
+  try{
+    const res = await fetch(`https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB}`);
+    if(!res.ok) throw new Error('fetch failed');
+    const rows = await res.json();
+    const active = rows.filter(r => (r.actif || '').toUpperCase() === 'TRUE');
+    const offres = active.filter(r => (r.type || '').toLowerCase() === 'offre');
+    const codes = active.filter(r => (r.type || '').toLowerCase() === 'code');
+
+    if(offres.length){
+      const cardsEl = document.getElementById('offers-cards');
+      cardsEl.innerHTML = offres.map(o => {
+        const key = (o.bookmaker||'').toLowerCase();
+        const icon = ICONS[key] || ICONS.default;
+        return `
+        <div class="offer-card" style="--accent:var(--${key}, var(--gold));">
+          <span class="sport-icon">${icon}</span>
+          <div class="bmk disp">${o.bookmaker}</div>
+          <div class="cond">Bonus à l'inscription</div>
+          <div class="bonus">${o.bonus}</div>
+          <div class="cond">${o.condition || ''}</div>
+          <a class="btn-primary" href="${o.lien || '#'}" target="_blank" rel="noopener">S'inscrire sur ${o.bookmaker}</a>
+        </div>`;
+      }).join('');
+      cardsEl.querySelectorAll('.offer-card').forEach(attachTilt);
+    }
+    if(codes.length){
+      document.getElementById('offers-codes').innerHTML = codes.map(c => {
+        const key = (c.bookmaker||'').toLowerCase();
+        return `<a class="code-chip" style="--accent:var(--${key}, var(--gold));" href="${c.lien || '#'}" target="_blank" rel="noopener"><span class="name">${c.bookmaker}</span><span class="code">${c.bonus}</span></a>`;
+      }).join('');
+    }
+    document.getElementById('offers-updated').textContent = 'Offres mises à jour en direct depuis notre suivi interne.';
+  }catch(e){
+    console.warn('Impossible de charger les offres dynamiques, affichage des valeurs par défaut.', e);
+  }
+}
+loadOffers();
+</script>
+
+</body>
+</html>
