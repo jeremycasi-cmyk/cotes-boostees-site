@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculateur de conversion de bonus — Value & Cotes</title>
+<style>
+  :root{
+    --ink:#0E1512;
+    --panel:#141D19;
+    --panel-2:#1B2622;
+    --line:#2A3833;
+    --paper:#EDEBE3;
+    --paper-dim:#A9B3AC;
+    --emerald:#3FBF8F;
+    --emerald-dim:#2C8A67;
+    --amber:#D9A441;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.5;
+  }
+  .mono{font-family:"IBM Plex Mono","SF Mono",Consolas,monospace;}
+  header{
+    padding:56px 24px 32px;
+    max-width:960px;
+    margin:0 auto;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--emerald);
+    margin:0 0 12px;
+  }
+  h1{
+    font-size:clamp(28px,4vw,42px);
+    margin:0 0 12px;
+    letter-spacing:-0.01em;
+    font-weight:650;
+  }
+  header p{
+    color:var(--paper-dim);
+    max-width:60ch;
+    font-size:15.5px;
+    margin:0;
+  }
+  main{max-width:960px;margin:0 auto;padding:40px 24px 80px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
+  @media (max-width:800px){.grid{grid-template-columns:1fr;}}
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:28px;
+    margin-bottom:24px;
+  }
+  .card h2{
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color:var(--paper-dim);
+    margin:0 0 4px;
+    font-family:"IBM Plex Mono",monospace;
+    font-weight:500;
+  }
+  .card .sub{
+    font-size:14px;
+    color:var(--paper-dim);
+    margin:0 0 22px;
+  }
+  label{
+    display:block;
+    font-size:13px;
+    color:var(--paper-dim);
+    margin:16px 0 6px;
+  }
+  input, select{
+    width:100%;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:10px 12px;
+    color:var(--paper);
+    font-family:"IBM Plex Mono",monospace;
+    font-size:15px;
+  }
+  input:focus, select:focus{outline:2px solid var(--emerald-dim);outline-offset:1px;}
+  .outcome-row{
+    display:grid;
+    grid-template-columns:1fr 1fr auto;
+    gap:8px;
+    align-items:end;
+    margin-top:10px;
+  }
+  .outcome-row label{margin:0 0 4px;}
+  .fb-tag{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11px;
+    color:var(--ink);
+    background:var(--emerald);
+    border-radius:5px;
+    padding:0 8px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    border:1px solid var(--emerald);
+    white-space:nowrap;
+  }
+  .fb-tag.off{
+    background:transparent;
+    color:var(--paper-dim);
+    border:1px solid var(--line);
+  }
+  .result{
+    margin-top:24px;
+    padding:18px;
+    background:var(--panel-2);
+    border-radius:8px;
+    border:1px solid var(--line);
+  }
+  .result .row{
+    display:flex;
+    justify-content:space-between;
+    padding:6px 0;
+    font-size:14.5px;
+    border-bottom:1px dashed var(--line);
+  }
+  .result .row:last-child{border-bottom:none;}
+  .result .row span:first-child{color:var(--paper-dim);}
+  .result .row span:last-child{font-family:"IBM Plex Mono",monospace;}
+  .headline{
+    font-size:22px;
+    font-weight:650;
+    color:var(--emerald);
+    margin:0 0 4px;
+  }
+  .headline.amber{color:var(--amber);}
+  .note{
+    font-size:12.5px;
+    color:var(--paper-dim);
+    margin-top:14px;
+    line-height:1.5;
+  }
+  .badge{
+    display:inline-block;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11px;
+    padding:2px 8px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    color:var(--paper-dim);
+    margin-bottom:10px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">Outil — 01</p>
+  <h1>Calculateur de conversion de bonus</h1>
+  <p>Convertissez un freebet ou une mise qualificative en profit garanti. Un compte = une personne réelle qui joue et retire elle-même.</p>
+</header>
+
+<main>
+  <div class="grid">
+
+    <div class="card">
+      <span class="badge">Mise unique — dépôt</span>
+      <h2>Débloquer le retrait du dépôt</h2>
+      <p class="sub">Le dépôt doit être misé une seule fois (n'importe quelle cote) pour être autorisé à le retirer — le bonus lui-même n'a pas cette condition, il se joue à part en une seule mise (voir l'outil de droite). Ici, on couvre cette mise unique pour minimiser la perte.</p>
+
+      <label for="q-stake">Montant du dépôt à miser (€)</label>
+      <input id="q-stake" type="number" value="20" step="0.5">
+
+      <label for="q-back">Cote chez le bookmaker (back)</label>
+      <input id="q-back" type="number" value="3.0" step="0.05">
+
+      <label for="q-lay">Cote de couverture (lay / autre book)</label>
+      <input id="q-lay" type="number" value="3.1" step="0.05">
+
+      <label for="q-comm">Commission exchange (%)</label>
+      <input id="q-comm" type="number" value="2" step="0.5">
+
+      <div class="result" id="q-result"></div>
+    </div>
+
+    <div class="card">
+      <span class="badge">Freebet — dutching, toutes les issues</span>
+      <h2>Extraire un freebet sans exchange</h2>
+      <p class="sub">Le freebet est joué sur une issue, et vous couvrez <strong>toutes les autres issues</strong> chez d'autres bookmakers pour garantir un gain quel que soit le résultat. Utile pour un combiné ou un match dont vous voulez couvrir le 1X2 en entier — pas besoin de compte exchange, mais l'extraction plafonne plus bas (marges cumulées de plusieurs books).</p>
+
+      <label for="f-n">Nombre d'issues à couvrir</label>
+      <select id="f-n">
+        <option value="2">2 issues (ex: vainqueur match sans nul)</option>
+        <option value="3" selected>3 issues (ex: 1 / Nul / 2)</option>
+        <option value="4">4 issues (ex: combiné 2 legs binaires)</option>
+      </select>
+
+      <label for="f-stake">Montant du freebet (€)</label>
+      <input id="f-stake" type="number" value="50" step="1">
+
+      <div id="f-outcomes"></div>
+
+      <div class="result" id="f-result"></div>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <h2>Comment lire ces résultats</h2>
+    <p class="sub" style="margin-bottom:0;">
+Le dépôt et le bonus ont deux mécaniques séparées : le dépôt doit être misé une fois pour être retirable (outil de gauche, on couvre pour minimiser la perte), le bonus arrive ensuite en freebet et ne se joue qu'en une seule mise (outil de droite, on couvre toutes les issues pour maximiser l'extraction) — la case verte marque l'issue sur laquelle le freebet est placé.
+      Plus il y a d'issues à couvrir, plus les marges des bookmakers s'accumulent et plus le pourcentage extrait baisse : viser 85-92% est réaliste sur 2-3 issues, un peu moins au-delà.
+      Rappel : ces calculs supposent des cotes correctement saisies et un compte utilisé par son titulaire réel, dans le respect des CGU de chaque opérateur.
+    </p>
+  </div>
+</main>
+
+<script>
+function computeQualifying(){
+  const stake = parseFloat(document.getElementById('q-stake').value) || 0;
+  const back = parseFloat(document.getElementById('q-back').value) || 0;
+  const lay = parseFloat(document.getElementById('q-lay').value) || 0;
+  const comm = (parseFloat(document.getElementById('q-comm').value) || 0) / 100;
+
+  const layStake = (back * stake) / (lay - comm);
+  const liability = layStake * (lay - 1);
+  const profitIfBackWins = (stake * (back - 1)) - liability;
+  const profitIfLayWins = (layStake * (1 - comm)) - stake;
+  const worst = Math.min(profitIfBackWins, profitIfLayWins);
+
+  const el = document.getElementById('q-result');
+  el.innerHTML = `
+    <div class="headline amber">${worst.toFixed(2)} € de perte estimée</div>
+    <div class="note" style="margin-top:0;">C'est le coût pour valider le bonus — à comparer à sa valeur.</div>
+    <div class="row"><span>Mise de couverture (lay)</span><span>${layStake.toFixed(2)} €</span></div>
+    <div class="row"><span>Exposition (liability)</span><span>${liability.toFixed(2)} €</span></div>
+    <div class="row"><span>Si le back gagne</span><span>${profitIfBackWins.toFixed(2)} €</span></div>
+    <div class="row"><span>Si la couverture gagne</span><span>${profitIfLayWins.toFixed(2)} €</span></div>
+  `;
+}
+
+let fbIndex = 0;
+
+function renderOutcomeRows(){
+  const n = parseInt(document.getElementById('f-n').value);
+  if(fbIndex >= n) fbIndex = 0;
+  const container = document.getElementById('f-outcomes');
+  const defaults = [3.0, 3.3, 3.6, 4.0];
+  let html = '';
+  for(let i=0;i<n;i++){
+    const existing = document.getElementById('o-'+i);
+    const val = existing ? existing.value : defaults[i];
+    html += `
+      <div class="outcome-row">
+        <div>
+          <label>Issue ${i+1} — bookmaker</label>
+          <input id="ob-${i}" type="text" placeholder="Bookmaker ${i+1}" value="${existing ? document.getElementById('ob-'+i).value : ''}">
+        </div>
+        <div>
+          <label>Cote</label>
+          <input id="o-${i}" type="number" step="0.05" value="${val}">
+        </div>
+        <div class="fb-tag ${fbIndex===i?'':'off'}" data-idx="${i}">${fbIndex===i?'FREEBET ICI':'placer ici'}</div>
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+
+  for(let i=0;i<n;i++){
+    document.getElementById('o-'+i).addEventListener('input', computeFreebet);
+    document.getElementById('ob-'+i).addEventListener('input', computeFreebet);
+  }
+  container.querySelectorAll('.fb-tag').forEach(tag=>{
+    tag.addEventListener('click', ()=>{
+      fbIndex = parseInt(tag.dataset.idx);
+      renderOutcomeRows();
+      computeFreebet();
+    });
+  });
+}
+
+// Résout un système linéaire carré A.v = b par élimination de Gauss
+function solveLinear(A, b){
+  const n = A.length;
+  const M = A.map((row,i)=>row.concat([b[i]]));
+  for(let col=0; col<n; col++){
+    let pivot = col;
+    for(let r=col+1;r<n;r++){
+      if(Math.abs(M[r][col]) > Math.abs(M[pivot][col])) pivot = r;
+    }
+    [M[col], M[pivot]] = [M[pivot], M[col]];
+    if(Math.abs(M[col][col]) < 1e-9) continue;
+    for(let r=0;r<n;r++){
+      if(r===col) continue;
+      const factor = M[r][col]/M[col][col];
+      for(let c=col;c<=n;c++) M[r][c] -= factor*M[col][c];
+    }
+  }
+  return M.map((row,i)=> row[n]/row[i] );
+}
+
+function computeFreebet(){
+  const n = parseInt(document.getElementById('f-n').value);
+  const stake = parseFloat(document.getElementById('f-stake').value) || 0;
+  const odds = [];
+  const names = [];
+  for(let i=0;i<n;i++){
+    odds.push(parseFloat(document.getElementById('o-'+i).value) || 1.01);
+    names.push(document.getElementById('ob-'+i).value || ('Issue '+(i+1)));
+  }
+
+  // unknowns: x_i pour i != fbIndex (mises de couverture), + P (profit garanti)
+  const others = [];
+  for(let i=0;i<n;i++) if(i!==fbIndex) others.push(i);
+  const size = others.length + 1; // + P
+  const A = [];
+  const b = [];
+
+  // équation pour l'issue du freebet: sum(x_i) + P = stake*(odds[fb]-1)
+  let row = others.map(()=>1).concat([1]);
+  A.push(row);
+  b.push(stake*(odds[fbIndex]-1));
+
+  // équation pour chaque autre issue k
+  others.forEach(k=>{
+    const r = others.map(i => i===k ? -(odds[k]-1) : 1).concat([1]);
+    A.push(r);
+    b.push(0);
+  });
+
+  const sol = solveLinear(A,b);
+  const P = sol[sol.length-1];
+  const stakesByIndex = {};
+  others.forEach((idx,j)=> stakesByIndex[idx] = sol[j]);
+
+  const extraction = stake>0 ? (P/stake*100) : 0;
+
+  let rowsHtml = '';
+  for(let i=0;i<n;i++){
+    if(i===fbIndex){
+      rowsHtml += `<div class="row"><span>${names[i]} (freebet, cote ${odds[i].toFixed(2)})</span><span>${stake.toFixed(2)} € (freebet)</span></div>`;
+    } else {
+      rowsHtml += `<div class="row"><span>${names[i]} (cote ${odds[i].toFixed(2)})</span><span>${stakesByIndex[i].toFixed(2)} € à miser</span></div>`;
+    }
+  }
+
+  const el = document.getElementById('f-result');
+  el.innerHTML = `
+    <div class="headline">${P.toFixed(2)} € de profit garanti</div>
+    <div class="note" style="margin-top:0;">Soit ${extraction.toFixed(1)}% du freebet extrait, quelle que soit l'issue.</div>
+    ${rowsHtml}
+    <div class="row"><span>Total misé en couverture</span><span>${others.reduce((s,i)=>s+stakesByIndex[i],0).toFixed(2)} €</span></div>
+  `;
+}
+
+['q-stake','q-back','q-lay','q-comm'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', computeQualifying);
+});
+document.getElementById('f-n').addEventListener('change', ()=>{ renderOutcomeRows(); computeFreebet(); });
+document.getElementById('f-stake').addEventListener('input', computeFreebet);
+
+computeQualifying();
+renderOutcomeRows();
+computeFreebet();
+</script>
+
+</body>
+</html>
