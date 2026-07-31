@@ -716,8 +716,11 @@ async function loadStats(){
     if(!res.ok) throw new Error('fetch failed');
     const rows = await res.json();
     if(rows.length){
-      const s = rows[0];
-      const map = { 'stat-benefice': s['benefice'], 'stat-roi': s['roi'], 'stat-mise': s['mise_moyenne'], 'stat-cotemoyenne': s['cote_moyenne'] };
+      const raw = rows[0];
+      const norm = (k)=> k.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/\s+/g,'_');
+      const s = {};
+      Object.entries(raw).forEach(([k,v])=>{ s[norm(k)] = v; });
+      const map = { 'stat-benefice': s['benefice'], 'stat-roi': s['roi'], 'stat-mise': s['mise_moyenne'] || s['mise'], 'stat-cotemoyenne': s['cote_moyenne'] };
       Object.entries(map).forEach(([id, val])=>{
         const el = document.getElementById(id);
         if(el && val) el.dataset.count = parseFloat(String(val).replace(',', '.'));
