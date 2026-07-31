@@ -140,6 +140,21 @@
 
   .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
   @media (max-width:750px){.stats-row{grid-template-columns:repeat(2,1fr);}}
+  .stats-section{position:relative;overflow:hidden;}
+  .chart-bg{
+    position:absolute;inset:0;z-index:0;
+    background-image:url('bankroll-chart.png');
+    background-size:cover;background-position:center 30%;
+    opacity:.16;
+    filter:saturate(1.3);
+    mask-image:linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
+    -webkit-mask-image:linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
+  }
+  .stats-section .wrap{position:relative;z-index:2;}
+  .stats-section::after{
+    content:'';position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg, var(--ink) 0%, rgba(10,14,23,0.55) 40%, rgba(10,14,23,0.55) 60%, var(--ink) 100%);
+  }
   .stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:border-color .2s,transform .2s;}
   .stat:hover{border-color:var(--gold-dim);transform:translateY(-3px);}
   .stat .num{font-family:"IBM Plex Mono",monospace;font-size:28px;font-weight:600;color:var(--paper);}
@@ -299,7 +314,8 @@
 </div>
 
 <main>
-<section id="stats">
+<section id="stats" class="stats-section">
+  <div class="chart-bg"></div>
   <div class="wrap">
     <div class="section-head">
       <p class="section-eyebrow">Bilan réel — saison 25/26</p>
