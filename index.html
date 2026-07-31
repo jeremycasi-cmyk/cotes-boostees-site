@@ -84,27 +84,100 @@
   .hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:40px;align-items:center;padding-bottom:50px;position:relative;z-index:1;}
   @media (max-width:850px){.hero-grid{grid-template-columns:1fr;}}
 
-  /* FLIP SCOREBOARD */
-  .scoreboard{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;perspective:800px;position:relative;max-width:340px;}
-  .scoreboard .sb-label{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-  .scoreboard .sb-label .rdot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1s infinite;}
-  .sb-flip{transform-style:preserve-3d;transition:transform .5s;}
-  .sb-flip.flipping{transform:rotateX(90deg);}
-  .sb-top{display:flex;align-items:center;gap:7px;margin-bottom:10px;}
-  .sb-sport{font-size:17px;line-height:1;}
-  .sb-comp{font-size:11px;color:var(--paper-dim);flex:1;text-transform:uppercase;letter-spacing:.04em;}
-  .sb-flags{font-size:15px;letter-spacing:2px;}
-  .sb-match{font-weight:700;font-size:16.5px;margin-bottom:4px;line-height:1.25;}
-  .sb-bet{font-size:12.5px;color:var(--paper-dim);margin-bottom:14px;}
-  .sb-odds-row{display:flex;align-items:center;gap:10px;background:var(--panel-2);border-radius:8px;padding:9px 12px;margin-bottom:10px;}
-  .sb-bk{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--blue);border:1px solid var(--blue-dim);padding:2px 7px;border-radius:20px;margin-right:auto;}
-  .sb-comp{font-size:12px;color:var(--paper-dim);margin-bottom:16px;}
-  .sb-odds{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-  .sb-old{font-family:"IBM Plex Mono",monospace;color:var(--paper-dim);text-decoration:line-through;font-size:18px;}
-  .sb-arrow{color:var(--gold);}
-  .sb-new{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-size:26px;font-weight:600;}
-  .sb-expire{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--red);}
-  .sb-stake{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--paper-dim);}
+  /* PHONE MOCKUP — PlikPok -> notif Tvgram -> message -> Uniclic -> pari -> confirmation -> outro */
+  .phone-wrap{display:flex;flex-direction:column;align-items:center;}
+  .sb-label{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin:0 0 16px;display:flex;align-items:center;gap:8px;}
+  .sb-label .rdot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1s infinite;}
+  .phone-frame{width:250px;height:520px;background:#0d0d0d;border-radius:38px;padding:10px;box-shadow:0 20px 50px rgba(0,0,0,0.5);position:relative;border:1px solid #2a2a2a;}
+  .phone-notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:90px;height:22px;background:#0d0d0d;border-radius:0 0 14px 14px;z-index:5;}
+  .phone-screen{width:100%;height:100%;background:var(--panel);border-radius:28px;overflow:hidden;position:relative;}
+  .ph-scene{position:absolute;inset:0;padding:18px 15px;opacity:0;transform:scale(.97);transition:opacity .35s ease,transform .35s ease;display:flex;flex-direction:column;pointer-events:none;}
+  .ph-scene.active{opacity:1;transform:scale(1);pointer-events:auto;}
+  @keyframes iconpop{0%{transform:scale(.3);opacity:0;}60%{transform:scale(1.12);opacity:1;}100%{transform:scale(1);}}
+
+  /* Écran de verrouillage — s'allume à l'arrivée de la notification */
+  .ph-lock{background:linear-gradient(180deg,#1a2438,#0d1420);position:relative;}
+  .ph-lock-off{position:absolute;inset:0;background:#000;z-index:6;animation:wakeup 1.1s ease forwards;}
+  .ph-lock.active .ph-lock-off{animation:wakeup 1.1s ease forwards;}
+  @keyframes wakeup{0%{opacity:1;}45%{opacity:1;}100%{opacity:0;}}
+  .ph-status{display:flex;justify-content:space-between;font-size:11px;color:var(--paper-dim);margin-bottom:26px;}
+  .ph-lockclock{font-family:"Space Grotesk",sans-serif;font-size:44px;font-weight:600;text-align:center;color:var(--paper);}
+  .ph-lockdate{text-align:center;font-size:12px;color:var(--paper-dim);margin-bottom:30px;}
+
+  /* Notification qui tombe sur l'écran de verrouillage */
+  .ph-push-banner{position:relative;background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);border-radius:14px;padding:11px;display:flex;gap:9px;align-items:flex-start;z-index:3;transform:translateY(-140%);opacity:0;transition:transform .45s cubic-bezier(.2,.8,.2,1) .6s, opacity .3s ease .6s;}
+  .ph-lock.active .ph-push-banner{transform:translateY(0);opacity:1;}
+  .ph-push-icon{width:26px;height:26px;border-radius:7px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;color:#fff;}
+  .ph-push-title{font-weight:700;font-size:11.5px;color:#fff;margin-bottom:1px;}
+  .ph-push-text{font-size:10.5px;color:#d8d8d8;line-height:1.3;}
+
+  /* App messagerie (Tvgram) — reproduit vos vrais posts */
+  .ph-tvgram{background:#0f1420;padding:16px 13px;}
+  .ph-tg-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:12.5px;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:10px;}
+  .ph-tg-bubble{background:var(--panel-2);border-radius:12px;padding:11px;font-size:10.5px;line-height:1.55;overflow-y:hidden;}
+  .ph-tg-title{font-weight:700;font-size:12px;margin-bottom:6px;}
+  .ph-tg-odds{display:flex;align-items:center;gap:7px;font-family:"IBM Plex Mono",monospace;font-size:12px;margin:5px 0 7px;}
+  .ph-tg-odds .old{color:var(--paper-dim);text-decoration:line-through;}
+  .ph-tg-odds .new{color:var(--gold);font-weight:700;font-size:14px;}
+  .ph-tg-tiers{color:var(--paper-dim);margin:5px 0;}
+  .ph-tg-tiers div{margin-bottom:1px;}
+  .ph-tg-meta{color:var(--paper-dim);margin-top:5px;}
+  .ph-tg-risk{color:#e8b84b;margin-top:4px;}
+  .ph-tap-hint{text-align:center;font-size:10.5px;color:var(--paper-dim);margin-top:auto;padding-top:8px;animation:pulse 1.4s infinite;}
+
+  /* Transition d'ouverture */
+  .ph-opening{background:#06251a;align-items:center;justify-content:center;}
+  .ph-opening-icon{width:64px;height:64px;border-radius:18px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#06251a;animation:iconpop .5s ease;}
+  .ph-opening-label{margin-top:14px;font-size:12px;color:var(--paper-dim);text-align:center;}
+
+  /* App Uniclic */
+  .ph-uniclic{background:#0a0f0c;padding-bottom:10px;}
+  .ph-un-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .ph-un-logo{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:12px;letter-spacing:.02em;display:flex;align-items:center;gap:5px;}
+  .ph-un-logo span{color:var(--gold);}
+  .ph-un-balance{font-family:"IBM Plex Mono",monospace;font-size:12px;background:var(--panel-2);padding:5px 9px;border-radius:8px;}
+  .ph-un-section{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;color:var(--paper-dim);margin-bottom:10px;}
+  .ph-un-white-card{background:#f4f4f2;border-radius:12px;padding:13px;color:#111;}
+  .ph-un-white-top{font-size:10.5px;font-weight:700;color:#333;margin-bottom:2px;}
+  .ph-un-white-time{font-size:9.5px;color:#777;margin-bottom:9px;}
+  .ph-un-teams{font-weight:700;font-size:13px;text-align:center;margin-bottom:8px;}
+  .ph-un-desc{font-size:9.5px;color:#444;line-height:1.4;margin-bottom:11px;}
+  .ph-un-btn{width:100%;background:var(--green);color:#06251a;border:none;border-radius:8px;padding:12px;font-weight:700;font-size:14px;font-family:"IBM Plex Mono",monospace;}
+  .ph-un-nav{margin-top:auto;display:flex;justify-content:space-between;font-size:10px;color:var(--paper-dim);padding-top:10px;border-top:1px solid var(--line);}
+
+  /* Panier Uniclic */
+  .ph-slip{background:#0a0f0c;justify-content:flex-end;padding:0;}
+  .ph-slip-sheet{background:var(--panel-2);border-radius:20px 20px 0 0;padding:18px 16px 20px;border:1px solid var(--line);border-bottom:none;transform:translateY(100%);transition:transform .4s cubic-bezier(.2,.8,.2,1);}
+  .ph-slip.active .ph-slip-sheet{transform:translateY(0);}
+  .ph-slip-title{font-weight:700;font-size:13px;margin-bottom:10px;}
+  .ph-slip-recap{font-size:11.5px;color:var(--paper-dim);margin-bottom:2px;}
+  .ph-slip-odds{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-weight:700;font-size:15px;margin-bottom:14px;}
+  .ph-slip-row{display:flex;align-items:center;justify-content:space-between;background:var(--panel);border-radius:10px;padding:10px 12px;margin-bottom:10px;}
+  .ph-slip-label{font-size:11.5px;color:var(--paper-dim);}
+  .ph-slip-stake{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:16px;}
+  .ph-slip-gain{display:flex;justify-content:space-between;font-size:11.5px;color:var(--paper-dim);margin-bottom:14px;}
+  .ph-slip-gain strong{color:var(--green);font-family:"IBM Plex Mono",monospace;}
+  .ph-slip-btn{width:100%;background:var(--green);color:#06251a;border:none;border-radius:10px;padding:13px;font-weight:700;font-size:14px;}
+
+  /* Confirmation */
+  .ph-confirm{background:#0a0f0c;align-items:center;justify-content:center;text-align:center;}
+  .ph-confirm-check{width:60px;height:60px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:28px;color:#06251a;animation:iconpop .4s ease;}
+  .ph-confirm-title{margin-top:14px;font-weight:700;font-size:14px;}
+  .ph-confirm-sub{margin-top:4px;font-size:11.5px;color:var(--paper-dim);}
+
+  /* Outro — verrouillage avec marque */
+  .ph-outro{background:linear-gradient(180deg,#141c2e,#0a0e17);align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;}
+  .ph-outro-chart{position:absolute;inset:0;opacity:.4;}
+  .ph-outro-chart svg{width:100%;height:100%;}
+  .ph-outro-chart path{fill:none;stroke:var(--green);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:520;stroke-dashoffset:520;}
+  .ph-outro.active .ph-outro-chart path{animation:drawchart 2.4s ease forwards;}
+  @keyframes drawchart{to{stroke-dashoffset:0;}}
+  .ph-outro-content{position:relative;z-index:2;}
+  .ph-outro-dot{width:12px;height:12px;border-radius:50%;background:var(--green);margin:0 auto 10px;box-shadow:0 0 14px var(--green);}
+  .ph-outro-brand{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:20px;letter-spacing:.03em;margin-bottom:10px;}
+  .ph-outro-cta{font-size:13px;color:var(--gold);font-weight:600;max-width:190px;margin:0 auto;line-height:1.4;}
+
+  .sb-stake{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--paper-dim);text-align:center;max-width:280px;}
   .sb-stake strong{color:var(--paper);font-family:"IBM Plex Mono",monospace;}
 
   /* PREVIEW STRIP */
@@ -278,25 +351,109 @@
       <p class="microcopy">18+ · Jeu responsable · Aucune garantie de gain</p>
     </div>
 
-    <div class="scoreboard">
-      <div class="sb-label"><span class="rdot"></span>Exemple — comment fonctionne un boost</div>
-      <div class="sb-flip" id="sb-flip">
-        <div class="sb-top">
-          <span class="sb-sport" id="sb-sport">⚽</span>
-          <span class="sb-comp mono" id="sb-comp">Football</span>
-          <span class="sb-flags" id="sb-flags">🇵🇱 🇹🇷</span>
+    <div class="phone-wrap">
+      <p class="sb-label"><span class="rdot"></span>Comment fonctionne une alerte</p>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+
+          <div class="ph-scene ph-lock" id="ph-lock">
+            <div class="ph-lock-off"></div>
+            <div class="ph-status"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="ph-lockclock">14:32</div>
+            <div class="ph-lockdate">Vendredi 31 juillet</div>
+            <div class="ph-push-banner">
+              <div class="ph-push-icon">🎯</div>
+              <div>
+                <div class="ph-push-title">Tvgram · Cotes Boostées</div>
+                <div class="ph-push-text">COTE BOOSTÉE UNIBET ⚽ — Argentine - Suisse, Messi décisif, boostée à 2,55</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ph-scene ph-tvgram" id="ph-tvgram">
+            <div class="ph-tg-header">🎯 Cotes boostées</div>
+            <div class="ph-tg-bubble">
+              <div class="ph-tg-title">🏆 COTE BOOSTÉE UNIBET ⚽</div>
+              <div>Argentine 🇦🇷 - Suisse 🇨🇭</div>
+              <div style="color:var(--paper-dim);margin:3px 0;">CB - L.Messi décisif en 1ère mi-temps (remboursé si non titulaire / tps règ.) (2,25 -&gt; 2,55 / Mise max 50€) - 90 Mins</div>
+              <div class="ph-tg-odds"><span class="old">2,25</span><span>→</span><span class="new">2,55</span></div>
+              <div>💰 Mise</div>
+              <div class="ph-tg-tiers">
+                <div>• 25€ ➜ solde ≥ 300€</div>
+                <div>• 20€ ➜ 200€ ≤ solde &lt; 300€</div>
+                <div>• 15€ ➜ 100€ ≤ solde &lt; 200€</div>
+                <div>• 10€ ➜ solde &lt; 100€</div>
+              </div>
+              <div class="ph-tg-meta">❄️ Mise utilisée pour le bilan</div>
+              <div class="ph-tg-meta">⏳ Dispo jusqu'à 3h00 🚨</div>
+              <div class="ph-tg-risk">Jouer comporte des risques ⚠️</div>
+            </div>
+            <div class="ph-tap-hint">👆 Toucher pour parier</div>
+          </div>
+
+          <div class="ph-scene ph-opening" id="ph-opening-uniclic">
+            <div class="ph-opening-icon">UC</div>
+            <div class="ph-opening-label">Ouverture de Uniclic…</div>
+          </div>
+
+          <div class="ph-scene ph-uniclic" id="ph-uniclic">
+            <div class="ph-un-header">
+              <div class="ph-un-logo">🚀 <span>COTES BOOSTÉES</span></div>
+              <div class="ph-un-balance">437,00 €</div>
+            </div>
+            <div class="ph-un-section">AUJOURD'HUI</div>
+            <div class="ph-un-white-card">
+              <div class="ph-un-white-top">🌍 <span>Cotes Boostées Coupe du Monde 2026</span></div>
+              <div class="ph-un-white-time">Demain à 03h00</div>
+              <div class="ph-un-teams">Argentine 🇦🇷 - Suisse 🇨🇭</div>
+              <div class="ph-un-desc">CB - L.Messi décisif en 1ère mi-temps (remboursé si non titulaire / tps règ.) (2,25 -&gt; 2,55 / Mise max 50€) - 90 Mins</div>
+              <button class="ph-un-btn">Oui · 2,55</button>
+            </div>
+            <div class="ph-un-nav">
+              <span>🏠</span><span>⚽</span><span>🔴 Live</span><span>🎯 Défis</span><span>🃏</span>
+            </div>
+          </div>
+
+          <div class="ph-scene ph-slip" id="ph-slip">
+            <div class="ph-slip-sheet">
+              <div class="ph-slip-title">🎟️ Mon pari</div>
+              <div class="ph-slip-recap">Argentine 🇦🇷 - Suisse 🇨🇭</div>
+              <div class="ph-slip-recap">Messi décisif en 1ère mi-temps</div>
+              <div class="ph-slip-odds">Cote boostée : 2,55</div>
+              <div class="ph-slip-row">
+                <span class="ph-slip-label">Mise (palier : solde ≥ 300€)</span>
+                <span class="ph-slip-stake">25€</span>
+              </div>
+              <div class="ph-slip-gain">
+                <span>Gain potentiel</span>
+                <strong>63,75€</strong>
+              </div>
+              <button class="ph-slip-btn">Valider mon pari</button>
+            </div>
+          </div>
+
+          <div class="ph-scene ph-confirm" id="ph-confirm">
+            <div class="ph-confirm-check">✓</div>
+            <div class="ph-confirm-title">Pari confirmé</div>
+            <div class="ph-confirm-sub">Bonne chance 🍀</div>
+          </div>
+
+          <div class="ph-scene ph-outro" id="ph-outro">
+            <div class="ph-outro-chart">
+              <svg viewBox="0 0 220 460" preserveAspectRatio="none">
+                <path d="M0 400 L20 390 L40 405 L60 370 L80 380 L100 320 L120 340 L140 270 L160 290 L180 200 L200 220 L220 130"/>
+              </svg>
+            </div>
+            <div class="ph-outro-content">
+              <div class="ph-outro-dot"></div>
+              <div class="ph-outro-brand disp">RJC BOOST</div>
+              <div class="ph-outro-cta">Rejoins le groupe gratuitement dès maintenant →</div>
+            </div>
+          </div>
+
         </div>
-        <div class="sb-match" id="sb-match">Górnik Zabrze — Fenerbahce</div>
-        <div class="sb-bet" id="sb-bet">Victoire + 3,5 buts</div>
-        <div class="sb-odds-row">
-          <span class="sb-bk" id="sb-bk">Winamax</span>
-          <span class="sb-old" id="sb-old">3,40</span>
-          <span class="sb-arrow">→</span>
-          <span class="sb-new" id="sb-new">3,75</span>
-        </div>
-        <div class="sb-expire" id="sb-expire">● Dispo jusqu'à 20h</div>
       </div>
-      <div class="sb-stake">💰 Exemple de gestion de mise : <strong>10€</strong> pour un capital de <strong>150€</strong></div>
     </div>
   </div>
 </header>
@@ -459,8 +616,8 @@ const demoBoosts = [
   {bk:'Winamax', sport:'🥊', flags:'🇮🇪 🇺🇸', comp:'MMA', match:'C. McGregor — M. Holloway', bet:'McGregor gagne par KO, KO technique ou disqualification', old:'3,40', new:'3,85', expire:'Demain 04h20'},
 ];
 
-// Preview strip (cartes visuelles + carte verrouillée) — alimenté par les vraies données live
-let boosts = demoBoosts; // valeur de repli tant que le live n'a pas encore répondu
+// Preview strip (cartes visuelles + carte verrouillée) — alimenté uniquement par les vraies données live
+let boosts = [];
 const track = document.getElementById('preview-track');
 function pCardHTML(b){
   return `<div class="p-card">
@@ -471,6 +628,12 @@ function pCardHTML(b){
   </div>`;
 }
 function renderPreviewTrack(){
+  if(!boosts.length){
+    track.style.animation = 'none';
+    track.innerHTML = `<div class="p-card locked" style="min-width:100%;">⏳<br>Aucune cote publique pour le moment<br><span style="opacity:.7;">rejoignez le groupe privé pour tout voir en direct</span></div>`;
+    return;
+  }
+  track.style.animation = '';
   const lockedCard = `<div class="p-card locked">🔒<br>+3 autres cotes<br>réservées aux membres</div>`;
   const shown = boosts.slice(0, Math.min(4, boosts.length));
   const seq = [];
@@ -478,7 +641,8 @@ function renderPreviewTrack(){
   seq.push(lockedCard);
   track.innerHTML = seq.join('') + seq.join('');
 }
-renderPreviewTrack();
+track.style.animation = 'none';
+track.innerHTML = `<div class="p-card locked" style="min-width:100%;">Chargement des cotes du jour…</div>`;
 
 // Boosts publics dynamiques — alimentés en direct par votre canal Telegram
 // (via le Worker Cloudflare qui détecte le hashtag #public)
@@ -488,40 +652,44 @@ async function loadPublicBoosts(){
     const res = await fetch(TELEGRAM_WORKER_URL);
     if(!res.ok) throw new Error('fetch failed');
     const rows = await res.json();
-    if(rows.length){
-      boosts = rows; // les champs (sport, flags, comp, match, bet, old, new, expire, bk) correspondent déjà
-      sbIndex = 0;
-      renderPreviewTrack();
-    }
+    boosts = rows; // vide si aucune cote active -> renderPreviewTrack affichera l'état vide
+    renderPreviewTrack();
   }catch(e){
-    console.warn('Boosts publics Telegram indisponibles, affichage des exemples par défaut.', e);
+    console.warn('Boosts publics Telegram indisponibles.', e);
+    track.style.animation = 'none';
+    track.innerHTML = `<div class="p-card locked" style="min-width:100%;">⚠️ Impossible de charger les cotes pour le moment</div>`;
   }
 }
 loadPublicBoosts();
 setInterval(loadPublicBoosts, 5 * 60 * 1000); // rafraîchit toutes les 5 minutes sans recharger la page
 
-// Flip scoreboard hero — toujours sur les exemples de démonstration, distincts du bandeau live en dessous
-let sbIndex = 0;
-function flipScoreboard(){
-  const el = document.getElementById('sb-flip');
-  el.classList.add('flipping');
-  burstSparkles(document.querySelector('.scoreboard'));
-  setTimeout(()=>{
-    sbIndex = (sbIndex + 1) % demoBoosts.length;
-    const b = demoBoosts[sbIndex];
-    document.getElementById('sb-sport').textContent = b.sport;
-    document.getElementById('sb-comp').textContent = b.comp;
-    document.getElementById('sb-flags').textContent = b.flags;
-    document.getElementById('sb-match').textContent = b.match;
-    document.getElementById('sb-bet').textContent = b.bet;
-    document.getElementById('sb-bk').textContent = b.bk;
-    document.getElementById('sb-old').textContent = b.old;
-    document.getElementById('sb-new').textContent = b.new;
-    document.getElementById('sb-expire').textContent = '● ' + b.expire;
-    el.classList.remove('flipping');
-  }, 260);
+// Mockup téléphone hero — PlikPok -> notif Tvgram -> message -> Uniclic -> pari -> confirmation -> outro
+const phScenes = ['ph-lock','ph-tvgram','ph-opening-uniclic','ph-uniclic','ph-slip','ph-confirm','ph-outro'];
+
+function showPhScene(name){
+  phScenes.forEach(s => document.getElementById(s).classList.toggle('active', s === name));
 }
-setInterval(flipScoreboard, 3800);
+
+const phSteps = [
+  { scene:'ph-lock', duration:2600 },
+  { scene:'ph-tvgram', duration:3600 },
+  { scene:'ph-opening-uniclic', duration:1000 },
+  { scene:'ph-uniclic', duration:1800 },
+  { scene:'ph-slip', duration:2800 },
+  { scene:'ph-confirm', duration:1500 },
+  { scene:'ph-outro', duration:2600 },
+];
+
+let phStepIndex = 0;
+function phTick(){
+  const step = phSteps[phStepIndex];
+  showPhScene(step.scene);
+  setTimeout(()=>{
+    phStepIndex = (phStepIndex + 1) % phSteps.length;
+    phTick();
+  }, step.duration);
+}
+phTick();
 
 // Count-up stats
 function animateCount(el){
@@ -632,20 +800,6 @@ function attachMagnetic(btn){
 }
 document.querySelectorAll('.magnetic').forEach(attachMagnetic);
 
-// Étincelles au flip du scoreboard
-function burstSparkles(container){
-  for(let i=0;i<10;i++){
-    const s = document.createElement('span');
-    s.className = 'sparkle';
-    const angle = (Math.PI*2/10) * i;
-    const dist = 40 + Math.random()*30;
-    s.style.setProperty('--sp-t', `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px)`);
-    s.style.left = '50%';
-    s.style.top = '30%';
-    container.appendChild(s);
-    setTimeout(()=>s.remove(), 700);
-  }
-}
 function attachTilt(card){
   card.addEventListener('mousemove', (e)=>{
     const rect = card.getBoundingClientRect();
