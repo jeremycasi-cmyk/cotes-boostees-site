@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rjcodds.github.io/cotes-boostees-site/sitemap.xml
