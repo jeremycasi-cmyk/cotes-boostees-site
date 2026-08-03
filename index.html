@@ -114,20 +114,34 @@
   .phone-wrap{display:flex;flex-direction:column;align-items:center;}
   .sb-label{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin:0 0 16px;display:flex;align-items:center;gap:8px;}
   .sb-label .rdot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1s infinite;}
-  .phone-frame{width:250px;height:520px;background:#0d0d0d;border-radius:38px;padding:10px;box-shadow:0 20px 50px rgba(0,0,0,0.5);position:relative;border:1px solid #2a2a2a;}
-  .phone-notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:90px;height:22px;background:#0d0d0d;border-radius:0 0 14px 14px;z-index:5;}
-  .phone-screen{width:100%;height:100%;background:var(--panel);border-radius:28px;overflow:hidden;position:relative;}
-  .ph-scene{position:absolute;inset:0;padding:18px 15px;opacity:0;transform:scale(.97);transition:opacity .35s ease,transform .35s ease;display:flex;flex-direction:column;pointer-events:none;}
+  .phone-frame{width:250px;height:520px;background:#0d0d0d;border-radius:44px;padding:10px;box-shadow:0 20px 50px rgba(0,0,0,0.5);position:relative;border:1px solid #2a2a2a;}
+  .phone-frame::after{content:'';position:absolute;inset:0;border-radius:44px;background:linear-gradient(115deg,rgba(255,255,255,0.10) 0%,rgba(255,255,255,0.03) 18%,rgba(255,255,255,0) 32%,rgba(255,255,255,0) 78%,rgba(255,255,255,0.05) 100%);pointer-events:none;z-index:8;}
+  .phone-island{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:82px;height:24px;background:#000;border-radius:20px;z-index:9;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.04);}
+  .phone-screen{width:100%;height:100%;background:var(--panel);border-radius:34px;overflow:hidden;position:relative;}
+  .ph-scene{position:absolute;inset:0;padding:42px 15px 18px;opacity:0;transform:scale(.97);transition:opacity .35s ease,transform .35s ease;display:flex;flex-direction:column;pointer-events:none;}
   .ph-scene.active{opacity:1;transform:scale(1);pointer-events:auto;}
   @keyframes iconpop{0%{transform:scale(.3);opacity:0;}60%{transform:scale(1.12);opacity:1;}100%{transform:scale(1);}}
+
+  /* Status bar iOS persistante — visible au-dessus de toutes les scènes */
+  .ph-statusbar{position:absolute;top:0;left:0;right:0;height:38px;padding:0 24px 0 22px;display:flex;align-items:center;justify-content:space-between;z-index:4;color:var(--paper);font-family:"Inter",sans-serif;pointer-events:none;transition:opacity .3s ease;}
+  .ph-statusbar .ph-sb-time{font-size:13px;font-weight:600;letter-spacing:-.01em;}
+  .ph-statusbar .ph-sb-icons{display:flex;align-items:center;gap:5px;}
+  .ph-sb-signal{display:flex;align-items:flex-end;gap:1.5px;height:9px;}
+  .ph-sb-signal span{width:2.5px;background:currentColor;border-radius:1px;}
+  .ph-sb-signal span:nth-child(1){height:35%;}
+  .ph-sb-signal span:nth-child(2){height:58%;}
+  .ph-sb-signal span:nth-child(3){height:78%;}
+  .ph-sb-signal span:nth-child(4){height:100%;}
+  .ph-sb-battery{width:21px;height:10.5px;border:1px solid currentColor;border-radius:2.5px;position:relative;opacity:.95;}
+  .ph-sb-battery::after{content:'';position:absolute;right:-3px;top:3px;width:1.5px;height:4.5px;background:currentColor;border-radius:0 1px 1px 0;}
+  .ph-sb-battery i{position:absolute;top:1.5px;left:1.5px;bottom:1.5px;width:70%;background:currentColor;border-radius:1px;display:block;}
 
   /* Écran de verrouillage — s'allume à l'arrivée de la notification */
   .ph-lock{background:linear-gradient(180deg,#1a2438,#0d1420);position:relative;}
   .ph-lock-off{position:absolute;inset:0;background:#000;z-index:6;animation:wakeup 1.1s ease forwards;}
   .ph-lock.active .ph-lock-off{animation:wakeup 1.1s ease forwards;}
   @keyframes wakeup{0%{opacity:1;}45%{opacity:1;}100%{opacity:0;}}
-  .ph-status{display:flex;justify-content:space-between;font-size:11px;color:var(--paper-dim);margin-bottom:26px;}
-  .ph-lockclock{font-family:"Space Grotesk",sans-serif;font-size:44px;font-weight:600;text-align:center;color:var(--paper);}
+  .ph-lockclock{font-family:"Space Grotesk",sans-serif;font-size:44px;font-weight:600;text-align:center;color:var(--paper);margin-top:10px;}
   .ph-lockdate{text-align:center;font-size:12px;color:var(--paper-dim);margin-bottom:30px;}
 
   /* Notification qui tombe sur l'écran de verrouillage */
@@ -208,28 +222,54 @@
 
   /* PREVIEW STRIP */
   .preview-shell{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel);padding:26px 0;position:relative;z-index:1;}
-  .preview-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
-  .preview-head h3{margin:0;font-size:16px;}
-  .preview-head p{margin:0;font-size:12.5px;color:var(--paper-dim);}
-  .preview-scroll{overflow:hidden;position:relative;}
-  .preview-scroll::before,.preview-scroll::after{content:'';position:absolute;top:0;bottom:0;width:50px;z-index:2;pointer-events:none;}
-  .preview-scroll::before{left:0;background:linear-gradient(90deg,var(--panel),transparent);}
-  .preview-scroll::after{right:0;background:linear-gradient(-90deg,var(--panel),transparent);}
-  .preview-track{display:flex;gap:14px;width:max-content;animation:scroll 32s linear infinite;}
-  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-  .p-card{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:196px;max-width:196px;}
-  .p-top{display:flex;align-items:center;gap:5px;margin-bottom:7px;}
-  .p-top .p-sport{font-size:14px;line-height:1;}
-  .p-top .p-comp{flex:1;font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--paper-dim);text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .p-top .p-flags{font-size:12px;}
-  .p-match{font-weight:700;font-size:12.5px;margin-bottom:2px;line-height:1.25;}
-  .p-bet{font-size:11px;color:var(--paper-dim);margin-bottom:9px;line-height:1.3;}
-  .p-odds-row{display:flex;align-items:center;gap:6px;background:var(--panel);border-radius:7px;padding:6px 9px;}
-  .p-bk{font-family:"IBM Plex Mono",monospace;font-size:9px;color:var(--blue);margin-right:auto;}
-  .p-old{font-family:"IBM Plex Mono",monospace;color:var(--paper-dim);text-decoration:line-through;font-size:11.5px;}
-  .p-arrow{color:var(--gold);font-size:10px;}
-  .p-new{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-weight:700;font-size:13.5px;}
+  .preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;}
+  @media (max-width:850px){.preview-grid{grid-template-columns:1fr;}}
+  .preview-head{margin-bottom:18px;}
+  .preview-head h3{margin:0 0 4px;font-size:16px;}
+  .preview-gift-text{margin:0;font-size:12.5px;color:var(--paper-dim);}
+  .preview-premium-card{margin:0;}
+  .preview-stack-wrap{position:relative;height:230px;perspective:1200px;margin:0 auto;max-width:520px;}
+  @media (max-width:520px){.preview-stack-wrap{height:220px;max-width:100%;}}
+  .preview-stack{position:absolute;inset:0;transform-style:preserve-3d;}
+  .preview-stack.navigable .p-card:not(.locked):not(.featured){cursor:pointer;}
+  .preview-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin:10px 0 0;}
+  .preview-nav-btn{background:var(--panel-2);border:1px solid var(--line);color:var(--paper);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:border-color .15s,transform .15s;}
+  .preview-nav-btn:hover{border-color:var(--gold-dim);transform:translateY(-1px);}
+  .preview-nav-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+  .preview-dots{display:flex;align-items:center;gap:6px;}
+  .preview-dot{width:6px;height:6px;border-radius:50%;background:var(--line);border:none;padding:0;cursor:pointer;transition:background .15s,transform .15s;}
+  .preview-dot:hover{background:var(--paper-dim);}
+  .preview-dot.active{background:var(--gold);transform:scale(1.3);}
+  .preview-dot:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+  .preview-caption{text-align:center;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--paper-dim);letter-spacing:.03em;margin:12px 0 0;}
+  .p-card{
+    background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+    width:250px;
+    position:absolute;left:50%;top:50%;
+    opacity:0;
+    transform:var(--tf,translate(-50%,-50%) translateZ(-150px) scale(.85)) translateY(var(--fy,0px));
+    box-shadow:0 20px 40px -14px rgba(0,0,0,.6);
+    will-change:transform,opacity,filter;
+  }
+  .p-top{display:flex;align-items:center;gap:6px;margin-bottom:9px;}
+  .p-top .p-sport{font-size:17px;line-height:1;}
+  .p-top .p-comp{flex:1;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--paper-dim);text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .p-top .p-flags{font-size:14px;}
+  .p-match{font-weight:700;font-size:15px;margin-bottom:3px;line-height:1.25;}
+  .p-bet{font-size:12.5px;color:var(--paper-dim);margin-bottom:12px;line-height:1.35;}
+  .p-odds-row{display:flex;align-items:center;gap:7px;background:var(--panel);border-radius:8px;padding:8px 11px;}
+  .p-bk{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--blue);margin-right:auto;}
+  .p-old{font-family:"IBM Plex Mono",monospace;color:var(--paper-dim);text-decoration:line-through;font-size:13px;}
+  .p-arrow{color:var(--gold);font-size:11px;}
+  .p-new{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-weight:700;font-size:16px;}
+  .p-card.featured{border-color:rgba(217,164,65,.55);box-shadow:0 0 0 1px rgba(217,164,65,.22),0 30px 60px -14px rgba(0,0,0,.65),0 0 40px -10px rgba(217,164,65,.3);}
+  .p-card.featured .p-new{text-shadow:0 0 14px rgba(217,164,65,.45);}
+  .p-card.depth-1{filter:blur(.4px) brightness(.93);}
+  .p-card.depth-2{filter:blur(1px) brightness(.82);}
+  .p-card.depth-3{filter:blur(1.6px) brightness(.7);}
   .p-card.locked{display:flex;align-items:center;justify-content:center;text-align:center;color:var(--paper-dim);font-size:12px;background:transparent;border-style:dashed;min-height:112px;}
+  .p-card.centered{position:static;transform:none !important;opacity:1 !important;filter:none !important;margin:0 auto;width:auto;max-width:280px;min-height:112px;}
+  @media (prefers-reduced-motion:reduce){.p-card{transition:none !important;}}
 
   main{position:relative;z-index:1;}
   section{padding:60px 0;border-top:1px solid var(--line);}
@@ -380,12 +420,28 @@
     <div class="phone-wrap">
       <p class="sb-label"><span class="rdot"></span>Comment fonctionne une alerte</p>
       <div class="phone-frame">
-        <div class="phone-notch"></div>
+        <div class="phone-island"></div>
         <div class="phone-screen">
+
+          <div class="ph-statusbar" id="ph-statusbar-persistent">
+            <span class="ph-sb-time">14:32</span>
+            <span class="ph-sb-icons">
+              <span class="ph-sb-signal"><span></span><span></span><span></span><span></span></span>
+              <svg width="15" height="11" viewBox="0 0 15 11" fill="none"><path d="M7.5 9.3a1 1 0 100 2 1 1 0 000-2zM4.3 6.6a4.5 4.5 0 016.4 0 .6.6 0 00.85-.85 5.7 5.7 0 00-8.1 0 .6.6 0 00.85.85zM2 4.2a8 8 0 0111 0 .6.6 0 10.85-.85 9.2 9.2 0 00-12.7 0 .6.6 0 00.85.85z" fill="currentColor"/></svg>
+              <span class="ph-sb-battery"><i></i></span>
+            </span>
+          </div>
 
           <div class="ph-scene ph-lock" id="ph-lock">
             <div class="ph-lock-off"></div>
-            <div class="ph-status"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="ph-statusbar" style="position:absolute;">
+              <span class="ph-sb-time">14:32</span>
+              <span class="ph-sb-icons">
+                <span class="ph-sb-signal"><span></span><span></span><span></span><span></span></span>
+                <svg width="15" height="11" viewBox="0 0 15 11" fill="none"><path d="M7.5 9.3a1 1 0 100 2 1 1 0 000-2zM4.3 6.6a4.5 4.5 0 016.4 0 .6.6 0 00.85-.85 5.7 5.7 0 00-8.1 0 .6.6 0 00.85.85zM2 4.2a8 8 0 0111 0 .6.6 0 10.85-.85 9.2 9.2 0 00-12.7 0 .6.6 0 00.85.85z" fill="currentColor"/></svg>
+                <span class="ph-sb-battery"><i></i></span>
+              </span>
+            </div>
             <div class="ph-lockclock">14:32</div>
             <div class="ph-lockdate">Vendredi 31 juillet</div>
             <div class="ph-push-banner">
@@ -486,12 +542,37 @@
 
 <div class="preview-shell">
   <div class="wrap">
-    <div class="preview-head">
-      <h3 class="disp">Aperçu public du jour</h3>
-      <p>🔒 La sélection complète (5-6 boosts/jour, parfois +) est réservée aux membres premium</p>
-    </div>
-    <div class="preview-scroll">
-      <div class="preview-track" id="preview-track"></div>
+    <div class="preview-grid">
+      <div class="preview-public">
+        <div class="preview-head">
+          <h3 class="disp">🎁 La cote offerte du jour</h3>
+          <p class="preview-gift-text">Offerte gratuitement, sans inscription. Le canal privé en reçoit 5 à 6 comme celle-ci chaque jour, parfois plus, dès leur sortie.</p>
+        </div>
+        <div class="preview-stack-wrap" id="previewStackWrap">
+          <div class="preview-stack" id="preview-track"></div>
+        </div>
+        <div class="preview-nav" id="previewNav" style="display:none;">
+          <button class="preview-nav-btn" id="previewPrev" aria-label="Cote précédente">←</button>
+          <div class="preview-dots" id="previewDots"></div>
+          <button class="preview-nav-btn" id="previewNext" aria-label="Cote suivante">→</button>
+        </div>
+        <p class="preview-caption" id="previewCaption"></p>
+      </div>
+
+      <div class="comm-card premium preview-premium-card">
+        <span class="badge">Premium</span>
+        <h3 class="disp">Telegram privé</h3>
+        <div class="price"><span class="amount">14,99€</span> / mois</div>
+        <div class="microcopy" style="margin:-10px 0 16px;">Gratuit pour les affiliés Celsius et/ou BigClash</div>
+        <ul>
+          <li>Toutes les cotes boostées, 5-6/jour et parfois bien plus, dès leur sortie</li>
+          <li>Aide à la gestion de bankroll</li>
+          <li>Suivi de bankroll détaillé, comme le bilan ci-dessus</li>
+          <li>Notification à chaque cote boostée sélectionnée</li>
+          <li>Aide personnalisée en cas de besoin</li>
+        </ul>
+        <a class="btn-primary" style="width:100%;justify-content:center;" href="https://t.me/cbbooste" target="_blank" rel="noopener">Voir l'abonnement</a>
+      </div>
     </div>
   </div>
 </div>
@@ -614,7 +695,10 @@
 <section id="transparence">
   <div class="wrap">
     <div class="transparency reveal">
-      <strong>Notre engagement :</strong> nous ne vendons pas de méthode miracle ni de gains garantis. Sur la saison en cours, nous avons remporté <span class="highlight">46,52 %</span> de nos paris — moins d'un sur deux — et notre bilan progresse malgré tout de <span class="highlight">+650 %</span>, grâce à une cote moyenne de <span class="highlight">2,70</span>. C'est le principe de notre approche : il ne s'agit pas de gagner plus souvent, mais de parier lorsque la cote proposée par le bookmaker est plus avantageuse que la probabilité réelle de l'événement. Les résultats varient d'une semaine à l'autre, y compris négativement, et nous publions chaque bilan, gagnant comme perdant.
+      <strong>Notre engagement :</strong> nous ne vendons pas de méthode miracle ni de gains garantis. Depuis décembre 2025, nous avons remporté <span class="highlight">46,52 %</span> de nos paris — moins d'un sur deux — et notre bilan progresse malgré tout de <span class="highlight">+650 %</span>, grâce à une cote moyenne de <span class="highlight">2,70</span>. C'est le principe de notre approche : il ne s'agit pas de gagner plus souvent, mais de parier lorsque la cote proposée par le bookmaker est plus avantageuse que la probabilité réelle de l'événement. Les résultats varient d'une semaine à l'autre, y compris négativement, et nous publions chaque bilan, gagnant comme perdant.
+      <div style="margin-top:18px;">
+        <a class="btn-secondary" href="https://app.bet-analytix.com/bankroll/1712234" target="_blank" rel="noopener">Voir le bilan complet en direct →</a>
+      </div>
     </div>
   </div>
 </section>
@@ -637,38 +721,177 @@
 const SHEET_ID = '13Qp5IiWt_YreXhXoY-_PEgtiys0d-MtCU5L1IUraWsQ';
 
 const demoBoosts = [
-  {bk:'Betclic', sport:'🚴', flags:'🇫🇷', comp:'Cyclisme · Tour de France', match:'Étape 20 — Alpe d\'Huez', bet:'Pogačar sur le podium de l\'étape', old:'1,50', new:'2,00', expire:'Dispo jusqu\'à 11h30'},
   {bk:'Unibet', sport:'⚽', flags:'🇦🇷 🇨🇭', comp:'Football · Coupe du Monde 2026', match:'Argentine — Suisse', bet:'Messi décisif en 1ère mi-temps', old:'2,25', new:'2,55', expire:'Sur 90 minutes'},
-  {bk:'Winamax', sport:'🥊', flags:'🇮🇪 🇺🇸', comp:'MMA', match:'C. McGregor — M. Holloway', bet:'McGregor gagne par KO, KO technique ou disqualification', old:'3,40', new:'3,85', expire:'Demain 04h20'},
 ];
 
-// Preview strip (cartes visuelles + carte verrouillée) — alimenté uniquement par les vraies données live
+// Preview stack (profondeur 3D, navigable) — alimenté uniquement par les vraies données live.
+// Toutes les cotes de "boosts" sont publiques : aucune n'est verrouillée, la pile permet
+// juste de les parcourir sans toutes les afficher à plat en même temps.
 let boosts = [];
+let stackOffset = 0;
 const track = document.getElementById('preview-track');
-function pCardHTML(b){
-  return `<div class="p-card">
+const stackWrap = document.getElementById('previewStackWrap');
+const previewCaption = document.getElementById('previewCaption');
+const previewNav = document.getElementById('previewNav');
+const previewDots = document.getElementById('previewDots');
+const reduceMotionMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+const VISIBLE_LAYERS = 4;
+const STACK_SLOTS = [
+  {tf:'translate(-50%,-50%) translateZ(26px) translateX(-6px) translateY(-2px) rotate(-2deg)', cls:'featured'},
+  {tf:'translate(-50%,-50%) translateZ(-40px) translateX(46px) translateY(-24px) rotate(5deg)', cls:'depth-1'},
+  {tf:'translate(-50%,-50%) translateZ(-95px) translateX(-58px) translateY(28px) rotate(-7deg)', cls:'depth-2'},
+  {tf:'translate(-50%,-50%) translateZ(-150px) translateX(72px) translateY(48px) rotate(9deg)', cls:'depth-3'},
+];
+
+function pCardHTML(b, slot, windowIndex){
+  const clickable = windowIndex > 0 ? ` data-advance="${windowIndex}"` : '';
+  return `<div class="p-card ${slot.cls}" data-base="${slot.tf}"${clickable}>
     <div class="p-top"><span class="p-sport">${b.sport}</span><span class="p-comp">${b.comp}</span><span class="p-flags">${b.flags}</span></div>
     <div class="p-match">${b.match}</div>
     <div class="p-bet">${b.bet}</div>
     <div class="p-odds-row"><span class="p-bk">${b.bk}</span><span class="p-old">${b.old}</span><span class="p-arrow">→</span><span class="p-new">${b.new}</span></div>
   </div>`;
 }
+
+function centeredMessageHTML(text){
+  return `<div class="p-card locked centered">${text}</div>`;
+}
+
+let firstStackRender = true;
+
+function accord(n, singular, plural){ return n === 1 ? singular : plural; }
+
 function renderPreviewTrack(){
   if(!boosts.length){
-    track.style.animation = 'none';
-    track.innerHTML = `<div class="p-card locked" style="min-width:100%;">⏳<br>Aucune cote publique pour le moment<br><span style="opacity:.7;">rejoignez le groupe privé pour tout voir en direct</span></div>`;
+    track.classList.remove('navigable');
+    track.style.display = 'flex'; track.style.alignItems = 'center'; track.style.justifyContent = 'center';
+    track.innerHTML = centeredMessageHTML('⏳<br>Aucune cote publique pour le moment<br><span style="opacity:.7;">rejoignez le groupe privé pour tout voir en direct</span>');
+    previewCaption.textContent = '';
+    previewNav.style.display = 'none';
     return;
   }
-  track.style.animation = '';
-  const lockedCard = `<div class="p-card locked">🔒<br>+3 autres cotes<br>réservées aux membres</div>`;
-  const shown = boosts.slice(0, Math.min(4, boosts.length));
-  const seq = [];
-  shown.forEach((b, i)=>{ seq.push(pCardHTML(b)); if(i === 1) seq.push(lockedCard); });
-  seq.push(lockedCard);
-  track.innerHTML = seq.join('') + seq.join('');
+  track.style.display = ''; track.style.alignItems = ''; track.style.justifyContent = '';
+  stackOffset = stackOffset % boosts.length;
+
+  previewCaption.textContent = `${boosts.length} cote${accord(boosts.length,'','s')} publique${accord(boosts.length,'','s')} disponible${accord(boosts.length,'','s')} aujourd'hui`;
+
+  if(boosts.length > 1){
+    previewNav.style.display = 'flex';
+    previewDots.innerHTML = boosts.map((_, i) =>
+      `<button class="preview-dot${i===stackOffset?' active':''}" data-goto="${i}" aria-label="Cote ${i+1}"></button>`
+    ).join('');
+  } else {
+    previewNav.style.display = 'none';
+  }
+
+  renderStackWindow();
 }
-track.style.animation = 'none';
-track.innerHTML = `<div class="p-card locked" style="min-width:100%;">Chargement des cotes du jour…</div>`;
+
+function renderStackWindow(animate){
+  track.classList.toggle('navigable', boosts.length > 1);
+  const windowSize = Math.min(VISIBLE_LAYERS, boosts.length);
+  const html = [];
+  for(let i = 0; i < windowSize; i++){
+    const b = boosts[(stackOffset + i) % boosts.length];
+    html.push(pCardHTML(b, STACK_SLOTS[i], i));
+  }
+  track.innerHTML = html.join('');
+
+  track.querySelectorAll('[data-advance]').forEach(card => {
+    card.addEventListener('click', () => rotateStack(parseInt(card.dataset.advance, 10)));
+  });
+
+  animatePreviewStack(animate);
+}
+
+function rotateStack(steps){
+  stackOffset = (stackOffset + steps) % boosts.length;
+  previewDots.querySelectorAll('.preview-dot').forEach((dot, i) => dot.classList.toggle('active', i === stackOffset));
+  renderStackWindow('rotate');
+}
+
+document.getElementById('previewPrev').addEventListener('click', () => rotateStack(boosts.length - 1));
+document.getElementById('previewNext').addEventListener('click', () => rotateStack(1));
+previewDots.addEventListener('click', (e) => {
+  const dot = e.target.closest('[data-goto]');
+  if(!dot) return;
+  stackOffset = parseInt(dot.dataset.goto, 10);
+  previewDots.querySelectorAll('.preview-dot').forEach((d, i) => d.classList.toggle('active', i === stackOffset));
+  renderStackWindow('rotate');
+});
+
+function animatePreviewStack(animate){
+  const cards = Array.from(track.querySelectorAll('.p-card[data-base]'));
+  const reduceMotion = reduceMotionMQ.matches;
+
+  if(reduceMotion){
+    cards.forEach(card => { card.style.setProperty('--tf', card.dataset.base); card.style.opacity = '1'; });
+  } else if(firstStackRender){
+    cards.forEach((card, i) => {
+      const delay = 80 + i * 100;
+      const dur = 700;
+      setTimeout(()=>{
+        card.style.transition = `transform ${dur}ms cubic-bezier(.16,1,.3,1), opacity ${dur}ms ease`;
+        card.style.opacity = '1';
+        card.style.setProperty('--tf', card.dataset.base);
+      }, delay);
+      setTimeout(()=>{ card.style.transition = 'none'; }, delay + dur + 30);
+    });
+  } else if(animate === 'rotate'){
+    cards.forEach(card => {
+      card.style.transition = 'transform 380ms cubic-bezier(.2,.8,.2,1), opacity 380ms ease';
+      card.style.opacity = '1';
+      card.style.setProperty('--tf', card.dataset.base);
+      setTimeout(()=>{ card.style.transition = 'none'; }, 410);
+    });
+  } else {
+    cards.forEach(card => { card.style.setProperty('--tf', card.dataset.base); card.style.opacity = '1'; });
+  }
+
+  if(firstStackRender && !reduceMotion){
+    firstStackRender = false;
+    startPreviewIdleAndTilt();
+  } else {
+    firstStackRender = false;
+  }
+}
+
+let previewAnimStarted = false;
+function startPreviewIdleAndTilt(){
+  if(previewAnimStarted) return;
+  previewAnimStarted = true;
+
+  const t0 = performance.now();
+  function idle(now){
+    const dt = (now - t0) / 1000;
+    track.querySelectorAll('.p-card[data-base]').forEach((card, i) => {
+      const y = Math.sin(dt * 0.6 + i * 1.7) * 5;
+      card.style.setProperty('--fy', y.toFixed(2) + 'px');
+    });
+    requestAnimationFrame(idle);
+  }
+  requestAnimationFrame(idle);
+
+  let tiltX = 0, tiltY = 0, targetX = 0, targetY = 0;
+  stackWrap.addEventListener('mousemove', (e)=>{
+    const r = stackWrap.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    targetX = px * 12; targetY = py * -12;
+  });
+  stackWrap.addEventListener('mouseleave', ()=>{ targetX = 0; targetY = 0; });
+  function raf(){
+    tiltX += (targetX - tiltX) * 0.06;
+    tiltY += (targetY - tiltY) * 0.06;
+    track.style.transform = `rotateY(${tiltX.toFixed(2)}deg) rotateX(${tiltY.toFixed(2)}deg)`;
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+}
+
+track.style.display = 'flex'; track.style.alignItems = 'center'; track.style.justifyContent = 'center';
+track.innerHTML = centeredMessageHTML('Chargement des cotes du jour…');
 
 // Boosts publics dynamiques — alimentés en direct par votre canal Telegram
 // (via le Worker Cloudflare qui détecte le hashtag #public)
@@ -682,8 +905,11 @@ async function loadPublicBoosts(){
     renderPreviewTrack();
   }catch(e){
     console.warn('Boosts publics Telegram indisponibles.', e);
-    track.style.animation = 'none';
-    track.innerHTML = `<div class="p-card locked" style="min-width:100%;">⚠️ Impossible de charger les cotes pour le moment</div>`;
+    track.classList.remove('navigable');
+    track.style.display = 'flex'; track.style.alignItems = 'center'; track.style.justifyContent = 'center';
+    track.innerHTML = centeredMessageHTML('⚠️ Impossible de charger les cotes pour le moment');
+    previewCaption.textContent = '';
+    previewNav.style.display = 'none';
   }
 }
 loadPublicBoosts();
@@ -694,6 +920,7 @@ const phScenes = ['ph-lock','ph-tvgram','ph-opening-uniclic','ph-uniclic','ph-sl
 
 function showPhScene(name){
   phScenes.forEach(s => document.getElementById(s).classList.toggle('active', s === name));
+  document.getElementById('ph-statusbar-persistent').style.opacity = name === 'ph-lock' ? '0' : '1';
 }
 
 const phSteps = [
