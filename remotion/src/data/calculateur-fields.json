@@ -1,0 +1,43 @@
+{
+  "scale": 3,
+  "cardWidth": 342,
+  "cardHeight": 1116.25,
+  "fields": {
+    "badge": {
+      "x": 29,
+      "y": 33,
+      "width": 263.046875,
+      "height": 22.5
+    },
+    "title": {
+      "x": 29,
+      "y": 65.5,
+      "width": 284,
+      "height": 39
+    },
+    "stakeLabel": {
+      "x": 29,
+      "y": 403,
+      "width": 284,
+      "height": 19.5
+    },
+    "stakeInput": {
+      "x": 29,
+      "y": 428.5,
+      "width": 284,
+      "height": 40
+    },
+    "outcomes": {
+      "x": 29,
+      "y": 478.5,
+      "width": 284,
+      "height": 269
+    },
+    "result": {
+      "x": 29,
+      "y": 771.5,
+      "width": 284,
+      "height": 315.75
+    }
+  }
+}
